@@ -14,12 +14,12 @@ vvi adj;// adj[u] -> list of nodes v such that u->v exists
 vi ans; // list of nodes that are articulation point
 
 
-// reference articles 
+// reference articles :
 // https://codeforces.com/blog/entry/71146
 // https://www.geeksforgeeks.org/dsa/articulation-points-or-cut-vertices-in-a-graph/
 
 class Solution {
-    void dfs(int node, int pred){
+    void dfsAP(int node, int pred){
         
         vis[node] = 1; // mark the node visited
         lo[node] = tin[node] = ++timer; // set the lo[node] and tin[node] as the timer
@@ -30,9 +30,10 @@ class Solution {
             if(ele == pred) continue; // skip the parent node (for undirected edges)
             if(vis[ele] == -1){
                 childCnt++;
-                dfs(ele, node); // recursively perform DFS for its children
+                dfsAP(ele, node); // recursively perform DFS for its children
                 // case 1 : when vis[ele] == -1
                 lo[node] = min(lo[node], lo[ele]); // update lo[node] to min(lo[node], lo[ele])
+                // this is for non - root cases of AP
                 if(pred != -1 && tin[node] <= lo[ele]) flg = true;  
                 // this is for the case when there exists a node v such that there exists no node  x present in subtree rooted at v st 
                 // there is a backedge from the x to node
@@ -40,6 +41,9 @@ class Solution {
             }
             else {
                 // ele is already visited (back edge)
+                // ***** note :: for back edge do not perform lo[node] = min(lo[ele], lo[node])
+                // instead perform lo[node] = min(tin[ele], lo[node])
+                // refer cf article
                 lo[node] = min(lo[node], tin[ele]);
             }
         }
@@ -65,7 +69,7 @@ class Solution {
         }
         // for each component perform DFS above 
         for(int i = 0; i < V; i++){
-            if(vis[i] == -1) dfs(i, -1);
+            if(vis[i] == -1) dfsAP(i, -1);
         }
         // if no AP exists -> return {-1}
         if(ans.empty()) return {-1};
