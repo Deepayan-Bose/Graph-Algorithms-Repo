@@ -14,6 +14,10 @@ vvi adj;// adj[u] -> list of nodes v such that u->v exists
 vi ans; // list of nodes that are articulation point
 
 
+// reference articles 
+// https://codeforces.com/blog/entry/71146
+// https://www.geeksforgeeks.org/dsa/articulation-points-or-cut-vertices-in-a-graph/
+
 class Solution {
     void dfs(int node, int pred){
         
